@@ -1,59 +1,127 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# AgendaFácil
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Sistema de agendamento online desenvolvido em Laravel com apoio de Laravel Boost e desenvolvimento assistido por IA (Vibe Coding). Permite que clientes escolham um serviço, vejam horários livres de um profissional, agendem, consultem e cancelem reservas; e que administradores acompanhem a agenda e gerenciem o catálogo de serviços.
 
-## About Laravel
+## Descrição da aplicação
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+O AgendaFácil resolve a dificuldade de marcar horários em estabelecimentos de serviço sem depender de telefone ou mensagens. O sistema mostra apenas horários realmente livres e impede sobreposição de agendamentos para o mesmo profissional. Há dois perfis: **cliente** (agenda e gerencia os próprios horários) e **administrador** (vê toda a agenda e mantém os serviços).
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Principais funcionalidades:
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- Cadastro e login de usuários.
+- Listagem de serviços ativos.
+- Consulta de horários livres por serviço, profissional e data.
+- Criação de agendamento com bloqueio de horário passado e de conflito.
+- Listagem e cancelamento dos próprios agendamentos.
+- Painel administrativo: agenda completa com filtro por status e CRUD de serviços.
 
-## Learning Laravel
+## Tecnologias utilizadas
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+- **Laravel** (PHP) — framework principal.
+- **Laravel Boost** — desenvolvimento assistido por IA (MCP + Skills + guidelines).
+- **Blade** — camada de views.
+- **CSS próprio com tokens** — identidade visual sem framework de UI (`public/css/app.css`).
+- **MySQL** em desenvolvimento; **SQLite em memória** nos testes.
+- **PHPUnit** — testes unitários e de feature.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## Requisitos
 
-## Laravel Sponsors
+- PHP 8.2+
+- Composer
+- MySQL (ou outro banco suportado pelo Laravel)
+- Node.js (opcional — apenas se for compilar assets; o CSS aqui é servido direto de `public/`)
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## Instalação
 
-### Premium Partners
+### 1. Clonar e instalar dependências
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+```bash
+git clone <url-do-repositorio>
+cd agendafacil
+composer install
+```
 
-## Contributing
+### 2. Configurar o ambiente
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+```bash
+cp .env.example .env
+php artisan key:generate
+```
 
-## Code of Conduct
+Edite o `.env` com as credenciais do banco:
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=agendafacil
+DB_USERNAME=root
+DB_PASSWORD=
+```
 
-## Security Vulnerabilities
+### 3. Criar o banco, rodar migrations e seeders
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Crie um banco vazio com o nome definido em `DB_DATABASE` e então:
 
-## License
+```bash
+php artisan migrate --seed
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Isso cria todas as tabelas e popula o sistema com usuários de teste, profissionais, serviços e disponibilidades.
+
+### 4. Executar o projeto
+
+```bash
+php artisan serve
+```
+
+A aplicação ficará disponível em `http://127.0.0.1:8000`.
+
+## Usuários de teste
+
+Cadastrados automaticamente via Seeders (`database/seeders/UserSeeder.php`):
+
+| Perfil | E-mail | Senha |
+|--------|--------|-------|
+| Administrador | `admin@agenda.test` | `password` |
+| Cliente | `cliente@agenda.test` | `password` |
+| Cliente | `maria@agenda.test` | `password` |
+
+O administrador é redirecionado para a agenda administrativa após o login; os clientes, para a lista de serviços.
+
+## Testes
+
+```bash
+php artisan test
+```
+
+A suíte cobre as regras de negócio (cálculo de horário, bloqueio de passado e de conflito, geração de slots), o isolamento de dados entre usuários, o CRUD de serviços e a autenticação.
+
+## Estrutura do repositório
+
+```
+agendafacil/
+├── README.md
+├── RELATORIO.md
+├── .ai/
+│   └── skills/            # Skills que orientam a IA (ver RELATORIO.md)
+├── app/
+│   ├── Http/Controllers/  # Auth, Service, Appointment, Admin
+│   ├── Http/Requests/     # Form Requests (validação)
+│   ├── Http/Middleware/   # EnsureUserIsAdmin
+│   ├── Models/            # User, Service, Professional, Availability, Appointment
+│   ├── Policies/          # AppointmentPolicy
+│   └── Services/          # AppointmentService (regra de negócio)
+├── bootstrap/
+├── config/
+├── database/
+│   ├── factories/
+│   ├── migrations/
+│   └── seeders/
+├── docs/
+│   └── PLANO_DE_IMPLEMENTACAO.md
+├── public/css/app.css     # Identidade visual (tokens)
+├── resources/views/       # Blade
+├── routes/
+└── tests/                 # Unit e Feature
+```
