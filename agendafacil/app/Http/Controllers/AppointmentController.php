@@ -11,6 +11,7 @@ use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\Gate;
 
 class AppointmentController extends Controller
 {
@@ -68,7 +69,7 @@ class AppointmentController extends Controller
 
     public function cancel(Request $request, Appointment $appointment): RedirectResponse
     {
-        $this->authorize('cancel', $appointment);
+        Gate::authorize('cancel', $appointment);
 
         $appointment->update(['status' => 'cancelado']);
 
